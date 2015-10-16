@@ -22,6 +22,7 @@ class Editor(tk.Frame):
         formatmenu = tk.Menu(menubar)
         formatmenu.add_command(label='Increase font size', command = self.incFontSize)
         formatmenu.add_command(label='Decrease font size', command = self.decFontSize)
+        formatmenu.add_command(label='Reverse colors', command = self.reverseColor)
         menubar.add_cascade(label = 'Format', menu = formatmenu)
 
         self.parent.config(menu = menubar)
@@ -33,10 +34,29 @@ class Editor(tk.Frame):
         self.textWindow.config(font=font)
 
     def decFontSize(self):
-        """ Increase editor font size by one unit."""
+        """ Decrease editor font size by one unit."""
         font = tkFont.Font(font = self.textWindow['font'])
         font.config(size = str(int(font['size']-1)))
         self.textWindow.config(font=font)
+
+    def reverseColor(self):
+        """ Reverse color scheme. """
+        fg_color = self.textWindow['foreground']
+        bg_color = self.textWindow['background']
+
+        # shows all config variables
+        #print self.textWindow.config()
+        # TODO -- take care of all variables, like highlight color, cursor color etc
+
+        if fg_color == "#ffffff":
+            self.textWindow.config(foreground="#000000")
+        else:
+            self.textWindow.config(foreground="#ffffff")
+
+        if bg_color == "#ffffff":
+            self.textWindow.config(background="#000000")
+        else:
+            self.textWindow.config(background="#ffffff")
 
 def main():
     root = tk.Tk()
