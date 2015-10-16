@@ -2,6 +2,7 @@
 
 import Tkinter as tk 
 import tkFont
+import tkMessageBox
 
 class Editor(tk.Frame):
 
@@ -24,6 +25,11 @@ class Editor(tk.Frame):
         formatmenu.add_command(label='Decrease font size', command = self.decFontSize)
         formatmenu.add_command(label='Reverse colors', command = self.reverseColor)
         menubar.add_cascade(label = 'Format', menu = formatmenu)
+
+        # help menus
+        helpmenu = tk.Menu(menubar)
+        helpmenu.add_command(label="About", command = self.displayAbout)
+        menubar.add_cascade(label = "Help", menu = helpmenu)
 
         self.parent.config(menu = menubar)
 
@@ -57,6 +63,10 @@ class Editor(tk.Frame):
             self.textWindow.config(background="#000000")
         else:
             self.textWindow.config(background="#ffffff")
+
+    def displayAbout(self):
+        """ Display an About message."""
+        tkMessageBox.showinfo('About', "This is a basic text editor written for fun.")
 
 def main():
     root = tk.Tk()
