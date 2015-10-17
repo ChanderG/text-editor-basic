@@ -33,6 +33,9 @@ class Editor(tk.Frame):
         filemenu.add_command(label='Open', command = self.openFile)
         filemenu.add_command(label='Save', command = self.saveFile)
         filemenu.add_command(label='Save As', command = self.saveAsFile)
+        filemenu.add_separator()
+        filemenu.add_command(label='Quit', command = self.quitApp)
+
         menubar.add_cascade(label = 'File', menu=filemenu)
 
         formatmenu = tk.Menu(menubar)
@@ -100,6 +103,14 @@ class Editor(tk.Frame):
         savefile.write(text)
         savefile.close()
         self.opsLabel.config(text = 'Saved buffer as "{0}"'.format(self.currFileName))
+
+    def quitApp(self):
+        """ Quit the applications.
+
+        Ask the user for confirmation for now.
+        """
+        if tkMessageBox.askyesno('Are you sure?', 'Any unsaved changes will be lost. Still continue?'):
+            self.quit()
 
     def incFontSize(self):
         """ Increase editor font size by one unit."""
