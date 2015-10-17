@@ -17,6 +17,8 @@ class Editor(tk.Frame):
         self.parent.title("text-editor-basic")
 
         self.textWindow = tk.Text(font="18")
+        # name of file bein edited
+        self.currFileName = None
         self.textWindow.pack(fill=tk.BOTH, expand=tk.YES)
 
         menubar = tk.Menu(self)
@@ -26,6 +28,7 @@ class Editor(tk.Frame):
         filemenu.add_command(label='New', command = self.newFile)
         filemenu.add_command(label='Open', command = self.openFile)
         filemenu.add_command(label='Save', command = self.saveFile)
+        filemenu.add_command(label='Save As', command = self.saveAsFile)
         menubar.add_cascade(label = 'File', menu=filemenu)
 
         formatmenu = tk.Menu(menubar)
@@ -45,21 +48,46 @@ class Editor(tk.Frame):
         """ Edit a new file. """
         if tkMessageBox.askyesno('Unsaved changes', 'Are you sure? You will lose unsaved changes!'):
             self.textWindow.delete("1.0", tk.END)
+            self.currFileName = None
 
     def openFile(self):
         """ Open a new file for editing."""
         self.newFile()
 
-        openedfile = tkFileDialog.askopenfile(mode='r')
+        openedfilename = tkFileDialog.askopenfilename()
+        # save file name
+        self.currFileName = openedfilename
+
+        openedfile = open(openedfilename, 'w')
         text = openedfile.read()
         self.textWindow.insert(tk.END, text)
+        openedfile.close()
 
     def saveFile(self):
+        """ Overwrite the file being currently edited. """
+
+        if self.currFileName == None:
+            # no file being edited
+            tkMessageBox.showerror('No file being edited', "Currently not editing an existing file. Use Save As to save this buffer to a filename of your choice.")
+        else:
+            # save the current file
+            savefile = open(self.currFileName, 'w')
+            text = self.textWindow.get("1.0", tk.END)
+            savefile.write(text)
+            savefile.close()
+
+
+    def saveAsFile(self):
         """ Save contents to a file.
         
         Simple brute force overwriting.
         """
-        savefile = tkFileDialog.asksaveasfile(mode='w')
+        savefilename = tkFileDialog.asksaveasfilename()
+
+        # note down file name
+        self.currFileName = savefilename
+
+        savefile = open(savefilename, 'w')
         text = self.textWindow.get("1.0", tk.END)
         savefile.write(text)
         savefile.close()
