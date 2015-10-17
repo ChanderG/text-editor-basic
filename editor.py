@@ -21,6 +21,10 @@ class Editor(tk.Frame):
         self.currFileName = None
         self.textWindow.pack(fill=tk.BOTH, expand=tk.YES)
 
+        # operations label -> echoes last operation done
+        self.opsLabel = tk.Label(text = 'editor ready')
+        self.opsLabel.pack(anchor='e')
+
         menubar = tk.Menu(self)
 
         # file menu 
@@ -49,6 +53,7 @@ class Editor(tk.Frame):
         if tkMessageBox.askyesno('Unsaved changes', 'Are you sure? You will lose unsaved changes!'):
             self.textWindow.delete("1.0", tk.END)
             self.currFileName = None
+            self.opsLabel.config(text = 'Opened new buffer for editing')
 
     def openFile(self):
         """ Open a new file for editing."""
@@ -63,6 +68,8 @@ class Editor(tk.Frame):
         self.textWindow.insert(tk.END, text)
         openedfile.close()
 
+        self.opsLabel.config(text = 'Opened file "{0}" for editing'.format(self.currFileName))
+
     def saveFile(self):
         """ Overwrite the file being currently edited. """
 
@@ -75,6 +82,7 @@ class Editor(tk.Frame):
             text = self.textWindow.get("1.0", tk.END)
             savefile.write(text)
             savefile.close()
+            self.opsLabel.config(text = 'Saved file "{0}"'.format(self.currFileName))
 
 
     def saveAsFile(self):
@@ -91,6 +99,7 @@ class Editor(tk.Frame):
         text = self.textWindow.get("1.0", tk.END)
         savefile.write(text)
         savefile.close()
+        self.opsLabel.config(text = 'Saved buffer as "{0}"'.format(self.currFileName))
 
     def incFontSize(self):
         """ Increase editor font size by one unit."""
