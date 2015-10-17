@@ -19,14 +19,23 @@ class Editor(tk.Frame):
         self.parent.title(EDITOR_NAME)
 
         self.textWindow = tk.Text(font="18")
-        # name of file bein edited
-        self.currFileName = None
         self.textWindow.pack(fill=tk.BOTH, expand=tk.YES)
+
+        # name of file being edited
+        self.currFileName = None
 
         # operations label -> echoes last operation done
         self.opsLabel = tk.Label(text = 'editor ready')
         self.opsLabel.pack(anchor='e')
 
+        # initialize Menus
+        self.initMenus()
+
+        # set focus to the editor part
+        self.textWindow.focus_set()
+
+    def initMenus(self):
+        """ Create and Add the Menubar and buttons. """
         menubar = tk.Menu(self)
 
         # file menu 
