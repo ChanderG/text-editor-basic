@@ -3,6 +3,7 @@
 import Tkinter as tk 
 import tkFont
 import tkMessageBox
+import tkFileDialog
 
 class Editor(tk.Frame):
 
@@ -20,6 +21,13 @@ class Editor(tk.Frame):
 
         menubar = tk.Menu(self)
 
+        # file menu 
+        filemenu = tk.Menu(menubar)
+        filemenu.add_command(label='New', command = self.newFile)
+        filemenu.add_command(label='Open', command = self.openFile)
+        filemenu.add_command(label='Save', command = self.saveFile)
+        menubar.add_cascade(label = 'File', menu=filemenu)
+
         formatmenu = tk.Menu(menubar)
         formatmenu.add_command(label='Increase font size', command = self.incFontSize)
         formatmenu.add_command(label='Decrease font size', command = self.decFontSize)
@@ -32,6 +40,29 @@ class Editor(tk.Frame):
         menubar.add_cascade(label = "Help", menu = helpmenu)
 
         self.parent.config(menu = menubar)
+
+    def newFile(self):
+        """ Edit a new file. """
+        if tkMessageBox.askyesno('Unsaved changes', 'Are you sure? You will lose unsaved changes!'):
+            self.textWindow.delete("1.0", tk.END)
+
+    def openFile(self):
+        """ Open a new file for editing."""
+        self.newFile()
+
+        openedfile = tkFileDialog.askopenfile(mode='r')
+        text = openedfile.read()
+        self.textWindow.insert(tk.END, text)
+
+    def saveFile(self):
+        """ Save contents to a file.
+        
+        Simple brute force overwriting.
+        """
+        savefile = tkFileDialog.asksaveasfile(mode='w')
+        text = self.textWindow.get("1.0", tk.END)
+        savefile.write(text)
+        savefile.close()
 
     def incFontSize(self):
         """ Increase editor font size by one unit."""
