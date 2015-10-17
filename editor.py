@@ -5,6 +5,8 @@ import tkFont
 import tkMessageBox
 import tkFileDialog
 
+EDITOR_NAME = 'text-editor-basic'
+
 class Editor(tk.Frame):
 
     def __init__(self, parent):
@@ -14,7 +16,7 @@ class Editor(tk.Frame):
         self.initUI()
 
     def initUI(self):
-        self.parent.title("text-editor-basic")
+        self.parent.title(EDITOR_NAME)
 
         self.textWindow = tk.Text(font="18")
         # name of file bein edited
@@ -51,12 +53,24 @@ class Editor(tk.Frame):
 
         self.parent.config(menu = menubar)
 
+    def updateTitle(self):
+        """ Update main window title.
+
+        Display name of file (if any) currently being edited.
+        """
+        if self.currFileName == None:
+            self.parent.title(EDITOR_NAME)
+        else:
+            self.parent.title(EDITOR_NAME + " - {0}".format(self.currFileName))
+
     def newFile(self):
         """ Edit a new file. """
         if tkMessageBox.askyesno('Unsaved changes', 'Are you sure? You will lose unsaved changes!'):
             self.textWindow.delete("1.0", tk.END)
             self.currFileName = None
             self.opsLabel.config(text = 'Opened new buffer for editing')
+
+        self.updateTitle()
 
     def openFile(self):
         """ Open a new file for editing."""
@@ -72,6 +86,7 @@ class Editor(tk.Frame):
         openedfile.close()
 
         self.opsLabel.config(text = 'Opened file "{0}" for editing'.format(self.currFileName))
+        self.updateTitle()
 
     def saveFile(self):
         """ Overwrite the file being currently edited. """
@@ -102,7 +117,9 @@ class Editor(tk.Frame):
         text = self.textWindow.get("1.0", tk.END)
         savefile.write(text)
         savefile.close()
+
         self.opsLabel.config(text = 'Saved buffer as "{0}"'.format(self.currFileName))
+        self.updateTitle()
 
     def quitApp(self):
         """ Quit the applications.
